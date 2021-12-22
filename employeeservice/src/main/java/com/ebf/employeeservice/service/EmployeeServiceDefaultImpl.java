@@ -20,30 +20,28 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class EmployeeServiceDefaultImpl implements EmployeeService {
 
-  private final EmployeeBasicInfoConverter employeeBasicInfoConverter;
   private final EmployeeRepository employeeRepository;
   private final CompanyRepository companyRepository;
 
   public EmployeeServiceDefaultImpl(EmployeeRepository employeeRepository, CompanyRepository companyRepository) {
     this.employeeRepository = employeeRepository;
     this.companyRepository = companyRepository;
-    this.employeeBasicInfoConverter = new EmployeeBasicInfoConverter();
   }
 
   @Override
   public EmployeeResponseDto save(long companyId, EmployeeUpsertDto employeeUpsertDto) {
-    Employee employee = employeeBasicInfoConverter.asEmployeeModel(employeeUpsertDto);
+    Employee employee = EmployeeBasicInfoConverter.asEmployeeModel(employeeUpsertDto);
     Company company = companyRepository.findById(companyId)
                           .orElseThrow(() -> new DataNotFoundException(EmployeeServiceErrorCode.COMPANY_NOT_FOUND));
     employee.setCompany(company);
-    return employeeBasicInfoConverter.asEmployeeResponseDto(employeeRepository.save(employee));
+    return EmployeeBasicInfoConverter.asEmployeeResponseDto(employeeRepository.save(employee));
   }
 
   @Override
   public EmployeeResponseDto findByCompanyIdAndEmployeeId(long companyId, long employeeId) {
     Employee employee = employeeRepository.findByIdAndCompanyId(employeeId, companyId).orElseThrow(
         () -> new DataNotFoundException(EmployeeServiceErrorCode.EMPLOYEE_NOT_FOUND_FOR_COMPANY));
-    return employeeBasicInfoConverter.asEmployeeResponseDto(employee);
+    return EmployeeBasicInfoConverter.asEmployeeResponseDto(employee);
   }
 
   @Override
@@ -64,10 +62,10 @@ public class EmployeeServiceDefaultImpl implements EmployeeService {
         .orElseThrow(() -> new DataNotFoundException(EmployeeServiceErrorCode.COMPANY_NOT_FOUND));
     Employee currentEmployee = employeeRepository.findByIdAndCompanyId(employeeId, companyId).orElseThrow(
         () -> new DataNotFoundException(EmployeeServiceErrorCode.EMPLOYEE_NOT_FOUND_FOR_COMPANY));
-    Employee updatedEmployee = employeeBasicInfoConverter.asEmployeeModel(employeeUpsertDto);
+    Employee updatedEmployee = EmployeeBasicInfoConverter.asEmployeeModel(employeeUpsertDto);
     updatedEmployee.setId(currentEmployee.getId());
     updatedEmployee.setCompany(currentEmployee.getCompany());
-    return employeeBasicInfoConverter.asEmployeeResponseDto(employeeRepository.save(updatedEmployee));
+    return EmployeeBasicInfoConverter.asEmployeeResponseDto(employeeRepository.save(updatedEmployee));
   }
 
   @Override
