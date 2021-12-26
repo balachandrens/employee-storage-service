@@ -2,7 +2,8 @@ package com.ebf.employeeservice.service.converter;
 
 import com.ebf.employeeservice.dto.EmployeeLightResponseDto;
 import com.ebf.employeeservice.dto.EmployeeResponseDto;
-import com.ebf.employeeservice.dto.EmployeeUpsertDto;
+import com.ebf.employeeservice.dto.EmployeeUpdateInfo;
+import com.ebf.employeeservice.dto.EmployeeInsertInfo;
 import com.ebf.employeeservice.model.Employee;
 
 public class EmployeeBasicInfoConverter {
@@ -17,10 +18,16 @@ public class EmployeeBasicInfoConverter {
                .address(employee.getAddress()).email(employee.getEmail()).salary(employee.getSalary()).build();
   }
 
-  public static Employee asEmployeeModel(EmployeeUpsertDto employeeUpsertDto) {
-    return Employee.builder().name(employeeUpsertDto.getName()).surname(employeeUpsertDto.getSurname())
-               .address(employeeUpsertDto.getAddress()).email(employeeUpsertDto.getEmail())
-               .salary(employeeUpsertDto.getSalary()).build();
+  public static Employee asEmployeeModel(EmployeeInsertInfo employeeInsertInfo) {
+    return Employee.builder().name(employeeInsertInfo.getName()).surname(employeeInsertInfo.getSurname())
+               .address(employeeInsertInfo.getAddress()).email(employeeInsertInfo.getEmail())
+               .salary(employeeInsertInfo.getSalary()).build();
+  }
+
+  public static Employee asEmployeeModel(EmployeeUpdateInfo employeeUpdateInfo) {
+    return Employee.builder().name(employeeUpdateInfo.getName()).surname(employeeUpdateInfo.getSurname())
+               .address(employeeUpdateInfo.getAddress()).email(employeeUpdateInfo.getEmail())
+               .salary(employeeUpdateInfo.getSalary()).build();
   }
 
 

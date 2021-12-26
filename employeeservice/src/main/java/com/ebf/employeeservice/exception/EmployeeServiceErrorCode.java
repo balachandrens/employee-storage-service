@@ -9,7 +9,9 @@ public enum EmployeeServiceErrorCode {
   EMPLOYEE_NOT_FOUND("EBF_ES_002", "Employee not found"),
   EMPLOYEE_NOT_FOUND_FOR_COMPANY("EBF_ES_003", "Employee not found for company"),
   COMPANY_NOT_FOUND("EBF_ES_004", "Company not found"),
-  DATA_BIND_EXCEPTION("EBF_ES_005", "Data bind exception");
+  DATA_BIND_EXCEPTION("EBF_ES_005", "Data bind exception"),
+  MISSING_PARAMETER_EXCEPTION("EBF_ES_006", "Missing parameter exception"),
+  ARGUMENT_MISMATCH_EXCEPTION("EBF_ES_007", "Argument mismatch exception");
 
 
 

@@ -1,5 +1,6 @@
 package com.ebf.employeeservice.dto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
@@ -14,7 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EmployeeUpsertDto {
+@Valid
+public class EmployeeUpdateInfo {
 
   @NotEmpty(message = "Name cannot be empty")
   private String name;

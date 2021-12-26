@@ -2,7 +2,8 @@ package com.ebf.employeeservice.service;
 
 import com.ebf.employeeservice.dto.EmployeeLightResponseDto;
 import com.ebf.employeeservice.dto.EmployeeResponseDto;
-import com.ebf.employeeservice.dto.EmployeeUpsertDto;
+import com.ebf.employeeservice.dto.EmployeeUpdateInfo;
+import com.ebf.employeeservice.dto.EmployeeInsertInfo;
 import com.ebf.employeeservice.exception.DataNotFoundException;
 import com.ebf.employeeservice.exception.EmployeeServiceErrorCode;
 import com.ebf.employeeservice.model.Company;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,18 +31,18 @@ public class EmployeeServiceDefaultImpl implements EmployeeService {
   }
 
   @Override
-  public EmployeeResponseDto save(long companyId, EmployeeUpsertDto employeeUpsertDto) {
-    Employee employee = EmployeeBasicInfoConverter.asEmployeeModel(employeeUpsertDto);
-    Company company = companyRepository.findById(companyId)
+  public EmployeeResponseDto save(EmployeeInsertInfo employeeInsertInfo) {
+    Employee employee = EmployeeBasicInfoConverter.asEmployeeModel(employeeInsertInfo);
+    Company company = companyRepository.findById(employeeInsertInfo.getCompanyId())
                           .orElseThrow(() -> new DataNotFoundException(EmployeeServiceErrorCode.COMPANY_NOT_FOUND));
     employee.setCompany(company);
     return EmployeeBasicInfoConverter.asEmployeeResponseDto(employeeRepository.save(employee));
   }
 
   @Override
-  public EmployeeResponseDto findByCompanyIdAndEmployeeId(long companyId, long employeeId) {
-    Employee employee = employeeRepository.findByIdAndCompanyId(employeeId, companyId).orElseThrow(
-        () -> new DataNotFoundException(EmployeeServiceErrorCode.EMPLOYEE_NOT_FOUND_FOR_COMPANY));
+  public EmployeeResponseDto findByEmployeeId(long employeeId) {
+    Employee employee = employeeRepository.findById(employeeId).orElseThrow(
+        () -> new DataNotFoundException(EmployeeServiceErrorCode.EMPLOYEE_NOT_FOUND));
     return EmployeeBasicInfoConverter.asEmployeeResponseDto(employee);
   }
 
@@ -57,20 +59,23 @@ public class EmployeeServiceDefaultImpl implements EmployeeService {
   }
 
   @Override
-  public EmployeeResponseDto update(long companyId, long employeeId, EmployeeUpsertDto employeeUpsertDto) {
-    companyRepository.findById(companyId)
-        .orElseThrow(() -> new DataNotFoundException(EmployeeServiceErrorCode.COMPANY_NOT_FOUND));
-    Employee currentEmployee = employeeRepository.findByIdAndCompanyId(employeeId, companyId).orElseThrow(
-        () -> new DataNotFoundException(EmployeeServiceErrorCode.EMPLOYEE_NOT_FOUND_FOR_COMPANY));
-    Employee updatedEmployee = EmployeeBasicInfoConverter.asEmployeeModel(employeeUpsertDto);
+  public EmployeeResponseDto update(long employeeId, EmployeeUpdateInfo employeeUpdateInfo) {
+    Employee currentEmployee = employeeRepository.findById(employeeId).orElseThrow(
+        () -> new DataNotFoundException(EmployeeServiceErrorCode.EMPLOYEE_NOT_FOUND));
+    Employee updatedEmployee = EmployeeBasicInfoConverter.asEmployeeModel(employeeUpdateInfo);
     updatedEmployee.setId(currentEmployee.getId());
     updatedEmployee.setCompany(currentEmployee.getCompany());
     return EmployeeBasicInfoConverter.asEmployeeResponseDto(employeeRepository.save(updatedEmployee));
   }
 
   @Override
-  public void removeEmployee(long companyId, long employeeId) {
-    employeeRepository.deleteByIdAndCompanyId(employeeId, companyId);
+  public void removeEmployee(long employeeId) {
+    try {
+      employeeRepository.deleteById(employeeId);
+    } catch (EmptyResultDataAccessException ex) {
+      throw new DataNotFoundException(String.format("Employee with Id : %s not found", employeeId));
+    }
+
   }
 
   @Override
