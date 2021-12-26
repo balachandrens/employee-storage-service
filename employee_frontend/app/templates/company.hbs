@@ -1,0 +1,36 @@
+{{page-title "Company"}}
+<div class="container">
+    <br>
+    <p>Employee List</p>
+</div>
+
+<div class="container">
+    <table class="styled-table" id="table-metabase">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Actions 
+                <LinkTo @route="employee" @models={{(array "new" this.model.companyId)}} class=" button button1">Add Employee</LinkTo> 
+                </th>
+                
+        </tr>
+    </thead>
+    <tbody>
+        {{#each this.model.employees as |employees|}}
+        <tr>
+            <td><div>{{employees.id}}</div></td>
+            <td><div contenteditable>{{employees.name}}</div></td>
+            <td><div contenteditable>{{employees.surname}}</div></td>
+            <td>
+                <LinkTo @route="employee" @models={{(array employees.id this.model.companyId)}} class=" button button1">Details</LinkTo> 
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<br><br>
+Average salary : &nbsp; &nbsp;{{this.model.averageSalary}}
+</div>
+{{outlet}}

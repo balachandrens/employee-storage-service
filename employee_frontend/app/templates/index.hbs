@@ -1,0 +1,18 @@
+{{page-title "Index"}}
+<p>
+    Service to help Creating, Reading, Updating, and Deleting employee records.<br>
+Please select a company to proceed.
+</p>
+
+<main class="container mt-s">
+  <div>
+      <br><br>
+    <LinkTo @route="company" @model="1">Company 1</LinkTo>
+  
+    <LinkTo @route="company" @model="2">Company 2</LinkTo>
+  
+    <LinkTo @route="company" @model="3">Company 3</LinkTo>
+  </div>
+</main>
+
+{{outlet}}

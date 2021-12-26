@@ -1,0 +1,19 @@
+{{page-title "Employee"}}
+
+<div class="container"><h2><br>Employee Info</h2></div>
+
+<form class="container mt-s">
+<div>Name: <br>{{input value=this.model.name}}</div>
+<div>Surname: <br>{{input value=this.model.surname}}</div>
+<div>Email: <br>{{input type="email" value=this.model.email}}</div>
+<div>Address: <br>{{input value=this.model.address}}</div>
+<div>Salary: <br>{{input type="number" value=this.model.salary}}<br><br></div>
+{{#if this.model.id}}
+  <button class="button1" {{action 'updateEmployee'}}>Update</button>
+  <button class="button2" {{action 'deleteEmployee'}}>Delete</button>
+{{else}}
+  <button class="button1" {{action 'insertEmployee'}}>Add Employee</button>
+{{/if}}
+
+</form>
+{{outlet}}
